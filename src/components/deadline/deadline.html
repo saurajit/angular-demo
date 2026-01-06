@@ -1,0 +1,11 @@
+<ng-container
+  *ngTemplateOutlet="template() || defaultTemplate; context: { $implicit: {
+    label: label(),
+    secondsLeft: secondsLeft$ | async
+  } }"
+></ng-container>
+
+<ng-template #defaultTemplate let-data>
+  <span class="label">{{data.label}}: </span>
+  <span class="content-wrapper">{{data.secondsLeft}}</span>
+</ng-template>

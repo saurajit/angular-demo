@@ -3,10 +3,11 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { DeadlineComponent } from './components/deadline/deadline';
 import { CommonModule } from '@angular/common';
 import { TimestampService, TimestampServiceToken } from './services/deadline';
+import { DeadlineRxComponent } from './components/deadlineRx/deadline-rx';
 
 @Component({
   selector: 'app-root',
-  imports: [DeadlineComponent, CommonModule],
+  imports: [DeadlineComponent, DeadlineRxComponent, CommonModule],
   providers: [
     {
       provide: TimestampServiceToken, // Provide this in any component that uses app-deadline
@@ -19,7 +20,7 @@ import { TimestampService, TimestampServiceToken } from './services/deadline';
     <h4>Default implementation</h4>
     <app-deadline></app-deadline>
 
-    <h4>Custom Implementation with template</h4>
+    <h4>With custom template</h4>
     <app-deadline
       label="Seconds to go"
       [updateInterval]="5000"
@@ -33,6 +34,9 @@ import { TimestampService, TimestampServiceToken } from './services/deadline';
         <span class="label"> - {{data.label}}</span>
       </div>
     </ng-template>
+
+    <h4>With new rsResource</h4>
+    <app-deadline-rx />
   `,
 })
 export class App {

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, InjectionToken } from '@angular/core';
+import { inject, InjectionToken, ResourceRef } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { interval, map, Observable, of, switchMap, take } from 'rxjs';
 
 type TimestampApiResponseType = {
@@ -13,6 +14,7 @@ export const TimestampServiceToken =
 
 export abstract class TimestampAbstractService {
   abstract getTimestamp(intervalInMs?: number): Observable<number>;
+  abstract getTimestamprs(intervalInMs?: number): ResourceRef<number| undefined>;
 }
 
 export class TimestampService implements TimestampAbstractService {
@@ -28,6 +30,14 @@ export class TimestampService implements TimestampAbstractService {
   getTimestamp(intervalInMs = 1000): Observable<number> {
     return interval(intervalInMs).pipe(switchMap(() => this.fetchTimestamp()));
   }
+
+  getTimestamprs(intervalInMs = 1000): ResourceRef<number| undefined> {
+    return rxResource({
+      params: () => ({intervalInMs}),
+      stream: ({params}) => this.getTimestamp(params.intervalInMs),
+      defaultValue: 0
+    })
+  }
 }
 
 // Example service to override and use different service
@@ -38,5 +48,16 @@ export class TimestampService2 implements TimestampAbstractService {
       take(this.dataList.length),
       switchMap((i) => of(this.dataList[i]))
     );
+  }
+
+  getTimestamprs(intervalInMs = 1000): ResourceRef<number| undefined> {
+    return rxResource({
+      params: () => ({intervalInMs}),
+      stream: ({params}) => interval(params.intervalInMs).pipe(
+        take(this.dataList.length),
+        switchMap((i) => of(this.dataList[i]))
+      ),
+      defaultValue: 0
+    })
   }
 }

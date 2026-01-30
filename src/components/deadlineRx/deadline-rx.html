@@ -1,0 +1,11 @@
+
+<div>
+  <span class="label">{{label()}}: </span>
+  @if(timestampResource.isLoading()) {
+    <span>Loading data..</span>
+  } @else if (timestampResource.error()) {
+    <span>Error fetching data..</span>
+  } @else {
+      <span class="content-wrapper">{{timestampResource.value()}}</span>
+  }
+</div>

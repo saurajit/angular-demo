@@ -14,10 +14,16 @@ export const TimestampServiceToken =
 
 export abstract class TimestampAbstractService {
   abstract getTimestamp(intervalInMs?: number): Observable<number>;
+}
+
+export const TimestampRxServiceToken =
+  new InjectionToken<TimestampRxAbstractService>('TimestampRxAbstractService');
+
+export abstract class TimestampRxAbstractService {
   abstract getTimestamprs(intervalInMs?: number): ResourceRef<number| undefined>;
 }
 
-export class TimestampService implements TimestampAbstractService {
+export class TimestampService implements TimestampAbstractService, TimestampRxAbstractService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = `https://timestamp-fawn.vercel.app/api/deadline`;
 
@@ -48,16 +54,5 @@ export class TimestampService2 implements TimestampAbstractService {
       take(this.dataList.length),
       switchMap((i) => of(this.dataList[i]))
     );
-  }
-
-  getTimestamprs(intervalInMs = 1000): ResourceRef<number| undefined> {
-    return rxResource({
-      params: () => ({intervalInMs}),
-      stream: ({params}) => interval(params.intervalInMs).pipe(
-        take(this.dataList.length),
-        switchMap((i) => of(this.dataList[i]))
-      ),
-      defaultValue: 0
-    })
   }
 }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { DeadlineComponent } from './components/deadline/deadline';
 import { CommonModule } from '@angular/common';
-import { TimestampService, TimestampServiceToken } from './services/deadline';
+import { TimestampRxServiceToken, TimestampService, TimestampServiceToken } from './services/deadline';
 import { DeadlineRxComponent } from './components/deadlineRx/deadline-rx';
 
 @Component({
@@ -13,6 +13,10 @@ import { DeadlineRxComponent } from './components/deadlineRx/deadline-rx';
       provide: TimestampServiceToken, // Provide this in any component that uses app-deadline
       useClass: TimestampService, // Provide a custom implementation
     },
+    {
+      provide: TimestampRxServiceToken, // Provide this in any component that uses app-deadline
+      useClass: TimestampService, // Provide a custom implementation
+    },
   ],
   template: `
     <div>Deadline is on: <strong>{{deadline | date}}</strong></div>
@@ -20,7 +24,7 @@ import { DeadlineRxComponent } from './components/deadlineRx/deadline-rx';
     <h4>Default implementation</h4>
     <app-deadline></app-deadline>
 
-    <h4>With custom template</h4>
+    <h4>With custom template(5s delay)</h4>
     <app-deadline
       label="Seconds to go"
       [updateInterval]="5000"
